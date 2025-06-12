@@ -1,6 +1,6 @@
 <template>
   <div>
     <NuxtRouteAnnouncer />
-    <div>Parte uno</div>
+    <div>Parte 0.2.0</div>
   </div>
 </template>
