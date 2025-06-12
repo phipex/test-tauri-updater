@@ -53,16 +53,32 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const { data } = await github.rest.repos.createRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag_name: `app-v${process.env.PACKAGE_VERSION}`,
-              name: `Desktop App v${process.env.PACKAGE_VERSION}`,
-              body: 'Take a look at the assets to download and install this app.',
-              draft: true,
-              prerelease: false
-            })
-            return data.id
+            const tagName = `app-v${process.env.PACKAGE_VERSION}`;
+            try {
+              const existingTags = await github.rest.repos.listTags({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+              });
+      
+              if (existingTags.data.some(tag => tag.name === tagName)) {
+                console.log(`Tag ${tagName} already exists. Skipping release creation.`);
+                return null;
+              }
+      
+              const { data } = await github.rest.repos.createRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag_name: tagName,
+                name: `Desktop App v${process.env.PACKAGE_VERSION}`,
+                body: 'Take a look at the assets to download and install this app.',
+                draft: true,
+                prerelease: false,
+              });
+      
+              return data.id;
+            } catch (error) {
+              core.setFailed(`Failed to create release: ${error.message}`);
+            }
 
   build-tauri:
     needs: create-release
