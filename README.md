@@ -73,3 +73,8 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+```bash
+export TAURI_SIGNING_PRIVATE_KEY="/home/felipe/Documentos/pruebas/tauri-updater/tauri-update/.tauri/myapp.key"
+# optionally also add a password
+export TAURI_SIGNING_PRIVATE_KEY_PASSWORD=""
+```
